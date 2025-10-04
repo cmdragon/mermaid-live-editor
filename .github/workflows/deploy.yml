@@ -29,8 +29,8 @@ jobs:
 
       - name: Build & Deploy
         env:
-          MERMAID_DOMAIN: 'mermaid.live'
-          MERMAID_ANALYTICS_URL: 'https://p.mermaid.live'
+          MERMAID_DOMAIN: 'mermaid.cmdragon.cn'
+          MERMAID_ANALYTICS_URL: ''
           MERMAID_RENDERER_URL: 'https://mermaid.ink'
           MERMAID_KROKI_RENDERER_URL: 'https://kroki.io'
           MERMAID_IS_ENABLED_MERMAID_CHART_LINKS: 'true'

@@ -79,49 +79,51 @@
   </Dialog.Root>
 {/if}
 
-<!-- Promotion Banner -->
-{#if showPromoBanner}
-  <div
-    class="relative flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-center text-sm font-medium text-white">
-    <a
-      href="https://tools.cmdragon.cn/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="flex-1 transition-all hover:underline">
-      🚀 Explore more useful tools - Visit CMDragon Tools
-    </a>
-    <button
-      onclick={closeBanner}
-      class="absolute right-2 rounded p-1 transition-all hover:bg-white/20"
-      title="Close banner"
-      aria-label="Close promotional banner">
-      <CloseIcon class="size-5" />
-    </button>
-  </div>
-{/if}
-
 <div class="flex h-full flex-col overflow-hidden">
+  <!-- Promotion Banner -->
+  {#if showPromoBanner}
+    <div
+      class="relative flex shrink-0 items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 text-center text-sm font-medium text-white">
+      <a
+        href="https://tools.cmdragon.cn/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex-1 transition-all hover:underline">
+        🚀 Explore more useful tools - Visit CMDragon Tools
+      </a>
+      <button
+        onclick={closeBanner}
+        class="absolute right-2 rounded p-1 transition-all hover:bg-white/20"
+        title="Close banner"
+        aria-label="Close promotional banner">
+        <CloseIcon class="size-5" />
+      </button>
+    </div>
+  {/if}
   <div class="flex flex-1 flex-col overflow-hidden" bind:clientWidth={width}>
     {#if isMobile}
-      <div class="flex items-center justify-center gap-2 p-4">
-        Edit <Switch
+      <div
+        class="flex shrink-0 items-center justify-center gap-2 border-b border-border bg-card px-4 py-3">
+        <span class="text-sm font-medium">Edit</span>
+        <Switch
           id="editorMode"
           class="data-[state=checked]:bg-accent"
           bind:checked={isViewMode}
           onclick={() => {
             logEvent('mobileViewToggle');
-          }} /> View
+          }} />
+        <span class="text-sm font-medium">View</span>
       </div>
     {/if}
     <div
       class={[
-        'size-full',
+        'flex-1 overflow-hidden',
         isMobile && ['w-[200%] duration-300', isViewMode && '-translate-x-1/2']
       ]}>
       <Resizable.PaneGroup
         direction="horizontal"
         autoSaveId="liveEditor"
-        class="gap-4 p-2 pt-0 sm:gap-0 sm:p-6 sm:pt-0">
+        class="gap-4 p-2 sm:gap-0 sm:p-6 sm:pt-0">
         <Resizable.Pane bind:this={editorPane} defaultSize={30} minSize={15}>
           <div class="flex h-full flex-col gap-4 sm:gap-6">
             <Card
