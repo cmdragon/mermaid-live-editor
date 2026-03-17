@@ -12,6 +12,7 @@
   import * as Dialog from '$/components/ui/dialog';
   import VersionSecurityToolbar from '$/components/VersionSecurityToolbar.svelte';
   import View from '$/components/View.svelte';
+  import WechatPopup from '$/components/WechatPopup.svelte';
   import type { EditorMode, Tab } from '$/types';
   import { PanZoomState } from '$/util/panZoom';
   import { stateStore, updateCodeStore } from '$/util/state';
@@ -21,6 +22,12 @@
   import CodeIcon from '~icons/custom/code';
   import GearIcon from '~icons/material-symbols/settings-outline-rounded';
   import CloseIcon from '~icons/material-symbols/close-rounded';
+
+  let showWechatPopup = $state(false);
+
+  const openWechatPopup = () => {
+    showWechatPopup = true;
+  };
 
   const panZoomState = new PanZoomState();
 
@@ -78,6 +85,9 @@
     </Dialog.Content>
   </Dialog.Root>
 {/if}
+
+<!-- Wechat Public Account Popup -->
+<WechatPopup bind:open={showWechatPopup} />
 
 <div class="flex h-full flex-col overflow-hidden">
   <!-- Promotion Banner -->
@@ -140,7 +150,7 @@
 
             <div class="group flex flex-wrap justify-between gap-4 sm:gap-6">
               <Preset />
-              <Actions />
+              <Actions onWechatClick={openWechatPopup} />
             </div>
           </div>
         </Resizable.Pane>

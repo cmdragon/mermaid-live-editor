@@ -15,6 +15,13 @@
   import { toBase64 } from 'js-base64';
   import DownloadIcon from '~icons/material-symbols/download';
   import WidthIcon from '~icons/material-symbols/width-rounded';
+  import MessageIcon from '~icons/material-symbols/chat-rounded';
+
+  interface Props {
+    onWechatClick?: () => void;
+  }
+
+  let { onWechatClick }: Props = $props();
 
   const FONT_AWESOME_URL = `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/${FAVersion}/css/all.min.css`;
 
@@ -241,5 +248,12 @@ ${svgString}`);
       <Input type="url" bind:value={gistURL} placeholder="Enter Gist URL" />
       <Button onclick={loadGist}>Load Gist</Button>
     </div>
+    <Separator />
+    {#if onWechatClick}
+      <Button class="w-full" onclick={onWechatClick}>
+        <MessageIcon />
+        微信公众号
+      </Button>
+    {/if}
   </div>
 </Card>
