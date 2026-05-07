@@ -18,15 +18,69 @@
   import { stateStore, updateCodeStore } from '$/util/state';
   import { logEvent } from '$/util/stats';
   import { initHandler } from '$/util/util';
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import CodeIcon from '~icons/custom/code';
   import GearIcon from '~icons/material-symbols/settings-outline-rounded';
   import CloseIcon from '~icons/material-symbols/close-rounded';
 
   let showWechatPopup = $state(false);
+  let popupMessage = $state('');
+
+  const verifyCode = async (code: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`https://api2.cmdragon.cn/api/v1/wechat/verify-code/${code}`);
+      if (response.status === 200) {
+        localStorage.setItem('wechat-verify-code', code);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const checkVerification = async () => {
+    const storedCode = localStorage.getItem('wechat-verify-code');
+    if (!storedCode) {
+      showWechatPopup = true;
+      popupMessage = '';
+      return;
+    }
+
+    const isValid = await verifyCode(storedCode);
+    if (!isValid) {
+      showWechatPopup = true;
+      popupMessage = '验证码已失效，请重新验证';
+    }
+  };
+
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  let intervalId: ReturnType<typeof setInterval> | null = null;
+
+  onMount(async () => {
+    await initHandler();
+    window.addEventListener('appinstalled', () => {
+      logEvent('pwaInstalled', { isMobile });
+    });
+
+    timeoutId = setTimeout(() => {
+      checkVerification();
+      intervalId = setInterval(checkVerification, 5000);
+    }, 20000);
+  });
+
+  onDestroy(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+  });
 
   const openWechatPopup = () => {
     showWechatPopup = true;
+    popupMessage = '';
   };
 
   const panZoomState = new PanZoomState();
@@ -87,7 +141,7 @@
 {/if}
 
 <!-- Wechat Public Account Popup -->
-<WechatPopup bind:open={showWechatPopup} />
+<WechatPopup bind:open={showWechatPopup} message={popupMessage} onVerify={verifyCode} />
 
 <div class="flex h-full flex-col overflow-hidden">
   <!-- Promotion Banner -->
